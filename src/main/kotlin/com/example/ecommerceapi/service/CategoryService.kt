@@ -19,6 +19,6 @@ class CategoryService {
     fun createCategory(category: Category): Category {
         categories.add(category.copy(id = categoryIdCounter))
         categoryIdCounter += 1
-        return categories.first { it.id == categoryIdCounter - 1 }
+        return category
     }
 }

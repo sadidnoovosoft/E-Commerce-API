@@ -1,7 +1,7 @@
 package com.example.ecommerceapi.service
 
 import com.example.ecommerceapi.model.Product
-import com.example.ecommerceapi.model.ProductList
+import com.example.ecommerceapi.viewmodel.ProductListView
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +17,7 @@ class ProductService(
         }
         products.add(product.copy(id = productIdCounter))
         productIdCounter += 1
-        return products.first { it.id == productIdCounter - 1 }
+        return product
     }
 
     fun getProducts(
@@ -26,7 +26,7 @@ class ProductService(
         minPrice: Double?,
         maxPrice: Double?,
         categoryId: Long?
-    ): ProductList {
+    ): ProductListView {
         val validProducts =
             if (categoryId != null) {
                 products.filter { it.categoryId == categoryId }
@@ -45,7 +45,7 @@ class ProductService(
         }
         val finalProducts = if (sortOrder == "desc") sortedProducts.reversed() else sortedProducts
 
-        return ProductList(finalProducts.size, finalProducts)
+        return ProductListView(finalProducts.size, finalProducts)
     }
 
     fun getProductDetails(productId: Long): Product {
@@ -58,7 +58,7 @@ class ProductService(
             throw NoSuchElementException("No product with productId ${product.id}")
         }
         products[productIndex] = product
-        return products[productIndex]
+        return product
     }
 
     fun deleteProduct(productId: Long) {
