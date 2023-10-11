@@ -7,4 +7,5 @@ data class Address(
     val state: String,
     val country: String,
     val pincode: String,
+    val userId: Long,
 )

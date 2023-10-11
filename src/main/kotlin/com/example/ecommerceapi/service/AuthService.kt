@@ -15,6 +15,6 @@ class AuthService {
         }
         users.add(user.copy(id = userIdCounter))
         userIdCounter += 1
-        return UserView(user.id, user.name, user.email)
+        return UserView(userIdCounter - 1, user.name, user.email)
     }
 }
