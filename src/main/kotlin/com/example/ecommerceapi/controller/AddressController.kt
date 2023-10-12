@@ -10,38 +10,41 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/address")
+@RequestMapping("/users/{userId}/addresses")
 class AddressController(
     private val addressService: AddressService
 ) {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createAddress(@RequestBody address: Address): Address {
-        return addressService.createAddress(address)
+    fun createAddress(@PathVariable userId: Long, @RequestBody address: Address): Address {
+        return addressService.createAddress(userId, address)
     }
 
     @GetMapping("/{addressId}")
-    fun getAddress(@PathVariable addressId: Long): Address {
-        return addressService.getAddress(addressId)
+    fun getAddress(@PathVariable userId: Long, @PathVariable addressId: Long): Address {
+        return addressService.getAddress(addressId, userId)
     }
 
     @GetMapping
-    fun getAddresses(@RequestParam userId: Long?): List<Address> {
+    fun getAddresses(@PathVariable userId: Long): List<Address> {
         return addressService.getAddresses(userId)
     }
 
-    @PutMapping
-    fun updateAddress(@RequestBody address: Address): Address {
-        return addressService.updateAddress(address)
+    @PutMapping("/{addressId}")
+    fun updateAddress(
+        @PathVariable userId: Long,
+        @PathVariable addressId: Long,
+        @RequestBody address: Address,
+    ): Address {
+        return addressService.updateAddress(addressId, userId, address)
     }
 
-    @DeleteMapping
-    fun deleteAddress(@RequestParam addressId: Long) {
-        return addressService.deleteAddress(addressId)
+    @DeleteMapping("/{addressId}")
+    fun deleteAddress(@PathVariable userId: Long, @PathVariable addressId: Long) {
+        return addressService.deleteAddress(addressId, userId)
     }
 }

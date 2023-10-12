@@ -1,7 +1,7 @@
 package com.example.ecommerceapi.service
 
 import com.example.ecommerceapi.model.Product
-import com.example.ecommerceapi.viewmodel.ProductListView
+import com.example.ecommerceapi.viewmodel.ProductListViewModel
 import org.springframework.stereotype.Service
 
 @Service
@@ -26,7 +26,7 @@ class ProductService(
         minPrice: Double?,
         maxPrice: Double?,
         categoryId: Long?
-    ): ProductListView {
+    ): ProductListViewModel {
         val validProducts =
             if (categoryId != null) {
                 products.filter { it.categoryId == categoryId }
@@ -44,8 +44,7 @@ class ProductService(
             else -> productsInRange.sortedBy { it.id }
         }
         val finalProducts = if (sortOrder == "desc") sortedProducts.reversed() else sortedProducts
-
-        return ProductListView(finalProducts.size, finalProducts)
+        return ProductListViewModel(finalProducts.size, finalProducts)
     }
 
     fun getProductDetails(productId: Long): Product {
@@ -53,19 +52,18 @@ class ProductService(
     }
 
     fun updateProduct(product: Product): Product {
-        val productIndex = products.indexOfFirst { it.id == product.id }
-        if (productIndex == -1) {
-            throw NoSuchElementException("No product with productId ${product.id}")
-        }
-        products[productIndex] = product
+        val oldProduct = products.first { it.id == product.id }
+        products.remove(oldProduct)
+        products.add(product)
         return product
     }
 
     fun deleteProduct(productId: Long) {
-        val product = products.find { it.id == productId }
-            ?: throw NoSuchElementException(
-                "Could not find product with productId: $productId"
-            )
+        val product = products.first { it.id == productId }
         products.remove(product)
+    }
+
+    fun getProductPrice(productId: Long): Double {
+        return products.first { it.id == productId }.price
     }
 }

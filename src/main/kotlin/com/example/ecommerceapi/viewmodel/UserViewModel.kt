@@ -1,6 +1,6 @@
 package com.example.ecommerceapi.viewmodel
 
-data class UserView(
+data class UserViewModel(
     val id: Long,
     val name: String,
     val email: String,

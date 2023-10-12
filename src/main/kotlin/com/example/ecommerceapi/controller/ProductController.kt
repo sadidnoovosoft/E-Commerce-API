@@ -1,7 +1,7 @@
 package com.example.ecommerceapi.controller
 
 import com.example.ecommerceapi.model.Product
-import com.example.ecommerceapi.viewmodel.ProductListView
+import com.example.ecommerceapi.viewmodel.ProductListViewModel
 import com.example.ecommerceapi.service.ProductService
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -29,7 +29,7 @@ class ProductController(private val productService: ProductService) {
         @RequestParam minPrice: Double?,
         @RequestParam maxPrice: Double?,
         @RequestParam categoryId: Long?
-    ): ProductListView {
+    ): ProductListViewModel {
         return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, categoryId)
     }
 
