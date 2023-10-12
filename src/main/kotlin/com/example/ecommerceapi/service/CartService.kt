@@ -31,7 +31,8 @@ class CartService(
                 CartItemViewModel(
                     productId = it.productId,
                     quantity = it.quantity,
-                    price = it.quantity * productService.getProductPrice(it.productId)
+                    price = it.quantity * productService.products
+                        .first { product -> product.id == it.productId }.price
                 )
             }
         val totalPrice = userCartItems.sumOf(CartItemViewModel::price)

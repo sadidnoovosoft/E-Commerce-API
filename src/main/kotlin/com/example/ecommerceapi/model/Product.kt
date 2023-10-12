@@ -4,6 +4,6 @@ data class Product(
     val id: Long,
     val name: String,
     val price: Double,
-    val quantity: Long,
+    val description: String,
     val categoryId: Long,
 )
