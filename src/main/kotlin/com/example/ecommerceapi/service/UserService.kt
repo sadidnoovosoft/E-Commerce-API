@@ -20,8 +20,11 @@ class UserService {
     }
 
     fun getAllUsers(pincode: String?, country: String?, state: String?, city: String?): List<UserViewModel> {
-        // TODO - Implement user filter
-        return users.map { user -> UserViewModel(user.id, user.firstName, user.lastName, user.password, user.email) }
+        val filteredUsers = users.filter { user ->
+            (pincode == null || user.pincode == pincode) && (country == null || user.country == country)
+            && (state == null || user.state == state) && (city == null || user.city == city)
+        }
+        return filteredUsers.map { user -> UserViewModel(user.id, user.firstName, user.lastName, user.password, user.email) }
     }
 
     fun updateUser(userId: Long, updatedUser: User): UserViewModel {
@@ -74,7 +77,11 @@ class UserService {
         users.remove(existingUser)
         users.add(userWithUpdatedAddress)
         return AddressViewModel(
-            existingUser.street, existingUser.city, existingUser.state, existingUser.country, existingUser.pincode
+            userWithUpdatedAddress.street,
+            userWithUpdatedAddress.city,
+            userWithUpdatedAddress.state,
+            userWithUpdatedAddress.country,
+            userWithUpdatedAddress.pincode
         )
     }
 }
