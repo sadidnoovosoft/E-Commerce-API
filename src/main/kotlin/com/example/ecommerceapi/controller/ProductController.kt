@@ -1,5 +1,6 @@
 package com.example.ecommerceapi.controller
 
+import com.example.ecommerceapi.model.Category
 import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import com.example.ecommerceapi.service.ProductService
@@ -28,9 +29,9 @@ class ProductController(private val productService: ProductService) {
         @RequestParam sortOrder: String?,
         @RequestParam minPrice: Double?,
         @RequestParam maxPrice: Double?,
-        @RequestParam categoryId: Long?
+        @RequestParam category: Category?
     ): ProductsViewModel {
-        return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, categoryId)
+        return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, category)
     }
 
     @GetMapping("/{productId}")

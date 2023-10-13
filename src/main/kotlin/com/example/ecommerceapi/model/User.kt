@@ -2,7 +2,18 @@ package com.example.ecommerceapi.model
 
 data class User(
     val id: Long,
-    val name: String,
+    val firstName: String,
+    val lastName: String,
     val password: String,
     val email: String,
+    val addresses: MutableList<Address> = mutableListOf()
+)
+
+data class Address(
+    val id: Long,
+    val street: String,
+    val city: String,
+    val state: String,
+    val country: String,
+    val pincode: String,
 )

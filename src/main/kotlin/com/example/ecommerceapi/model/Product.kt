@@ -5,5 +5,11 @@ data class Product(
     val name: String,
     val price: Double,
     val description: String,
-    val categoryId: Long,
+    val category: Category,
 )
+
+enum class Category {
+    ELECTRONICS,
+    FASHION,
+    FURNITURE
+}
