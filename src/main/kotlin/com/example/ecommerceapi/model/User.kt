@@ -1,14 +1,30 @@
 package com.example.ecommerceapi.model
 
+import com.example.ecommerceapi.viewmodel.UserOutputViewModel
+import jakarta.persistence.*
+
+@Entity
+@Table(name = "users")
 data class User(
-    val id: Long,
-    val firstName: String,
-    val lastName: String,
-    val password: String,
-    val email: String,
-    val street: String?,
-    val city: String?,
-    val state: String?,
-    val country: String?,
-    val pincode: String?,
-)
+    @Column(name = "first_name", nullable = false)
+    var firstName: String,
+
+    @Column(name = "last_name", nullable = false)
+    var lastName: String,
+
+    @Column(name = "email", unique = true, nullable = false)
+    var email: String,
+
+    @Column(name = "password", nullable = false, length = 10)
+    var password: String,
+
+    @OneToMany(mappedBy = "user")
+    val orders: List<Order> = emptyList()
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    val id: Long = 0
+
+    fun toUserOutputViewModel() = UserOutputViewModel(id, firstName, lastName, email)
+}
