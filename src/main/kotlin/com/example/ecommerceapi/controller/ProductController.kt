@@ -4,6 +4,7 @@ import com.example.ecommerceapi.model.Category
 import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import com.example.ecommerceapi.service.ProductService
+import com.example.ecommerceapi.viewmodel.ProductViewModel
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -16,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/products")
-class ProductController(private val productService: ProductService) {
+class ProductController(val productService: ProductService) {
 
     @PostMapping
-    fun addProduct(@RequestBody product: Product): Product {
+    fun addProduct(@RequestBody product: Product): ProductViewModel {
         return productService.addProduct(product)
     }
 
@@ -35,8 +36,8 @@ class ProductController(private val productService: ProductService) {
     }
 
     @GetMapping("/{productId}")
-    fun getProductDetails(@PathVariable productId: Long): Product {
-        return productService.getProductDetails(productId)
+    fun getProductById(@PathVariable productId: Long): ProductViewModel {
+        return productService.getProductById(productId)
     }
 
     @GetMapping("/search")
@@ -44,9 +45,9 @@ class ProductController(private val productService: ProductService) {
         return productService.getProductsByKeywords(keywords)
     }
 
-    @PutMapping
-    fun updateProduct(@RequestBody product: Product): Product {
-        return productService.updateProduct(product)
+    @PutMapping("/{productId}")
+    fun updateProduct(@RequestBody product: Product, @PathVariable productId: Long): ProductViewModel {
+        return productService.updateProduct(product, productId)
     }
 
     @DeleteMapping("/{productId}")

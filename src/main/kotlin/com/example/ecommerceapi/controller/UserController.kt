@@ -1,49 +1,41 @@
 package com.example.ecommerceapi.controller
 
-import com.example.ecommerceapi.model.User
 import com.example.ecommerceapi.service.UserService
-import com.example.ecommerceapi.viewmodel.AddressViewModel
-import com.example.ecommerceapi.viewmodel.UserViewModel
+import com.example.ecommerceapi.viewmodel.UserInputViewModel
+import com.example.ecommerceapi.viewmodel.UserOutputViewModel
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/users")
-class UserController(private val userService: UserService) {
+class UserController(val userService: UserService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    fun createUser(@RequestBody user: User): UserViewModel {
-        return userService.createUser(user)
+    fun createUser(@RequestBody userInputViewModel: UserInputViewModel): UserOutputViewModel {
+        return userService.createUser(userInputViewModel)
     }
 
     @GetMapping("/{userId}")
-    fun getUserById(@PathVariable userId: Long): User {
+    fun getUserById(@PathVariable userId: Long): UserOutputViewModel {
         return userService.getUserById(userId)
     }
 
     @GetMapping
-    fun getAllUsers(
-        @RequestParam pincode: String?,
-        @RequestParam country: String?,
-        @RequestParam state: String?,
-        @RequestParam city: String?,
-    ): List<UserViewModel> {
-        return userService.getAllUsers(pincode, country, state, city)
+    fun getAllUsers(): List<UserOutputViewModel> {
+        return userService.getAllUsers()
     }
 
     @PutMapping("/{userId}")
-    fun updateUser(@PathVariable userId: Long, @RequestBody updatedUser: User): UserViewModel {
+    fun updateUser(@PathVariable userId: Long, @RequestBody updatedUser: UserInputViewModel): UserOutputViewModel {
         return userService.updateUser(userId, updatedUser)
     }
 
@@ -51,21 +43,5 @@ class UserController(private val userService: UserService) {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteUser(@PathVariable userId: Long) {
         userService.deleteUser(userId)
-    }
-
-    @PostMapping("/{userId}/address")
-    @ResponseStatus(HttpStatus.CREATED)
-    fun addUserAddress(@PathVariable userId: Long, @RequestBody address: AddressViewModel): AddressViewModel {
-        return userService.addUserAddress(userId, address)
-    }
-
-    @GetMapping("/{userId}/address")
-    fun getUserAddress(@PathVariable userId: Long): AddressViewModel {
-        return userService.getUserAddress(userId)
-    }
-
-    @PatchMapping("/{userId}/address")
-    fun updateUserAddress(@PathVariable userId: Long, @RequestBody address: AddressViewModel): AddressViewModel {
-        return userService.updateUserAddress(userId, address)
     }
 }
