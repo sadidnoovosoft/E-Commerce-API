@@ -19,7 +19,10 @@ data class User(
     var password: String,
 
     @OneToMany(mappedBy = "user")
-    val orders: List<Order> = emptyList()
+    val orders: List<Order> = emptyList(),
+
+    @OneToMany
+    val cartItems: MutableList<CartItem> = mutableListOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
