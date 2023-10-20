@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-data class CartItem(
+class CartItem(
     @Column(name = "quantity", nullable = false)
     var quantity: Long,
 

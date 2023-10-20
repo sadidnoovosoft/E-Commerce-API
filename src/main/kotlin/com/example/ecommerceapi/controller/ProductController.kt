@@ -30,9 +30,10 @@ class ProductController(val productService: ProductService) {
         @RequestParam sortOrder: String?,
         @RequestParam minPrice: Double?,
         @RequestParam maxPrice: Double?,
-        @RequestParam category: Category?
+        @RequestParam category: Category?,
+        @RequestParam keywords: String?
     ): ProductsViewModel {
-        return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, category)
+        return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, category, keywords)
     }
 
     @GetMapping("/{productId}")

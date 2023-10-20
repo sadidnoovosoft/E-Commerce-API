@@ -4,5 +4,5 @@ import com.example.ecommerceapi.model.Product
 
 data class ProductsViewModel(
     val totalProducts: Int,
-    val products: List<Product>
+    val products: List<ProductViewModel>
 )

@@ -1,9 +1,10 @@
 package com.example.ecommerceapi.model
 
+import com.example.ecommerceapi.viewmodel.ProductViewModel
 import jakarta.persistence.*
 
 @Entity
-data class Product(
+class Product(
     @Column(name = "name", nullable = false)
     var name: String,
 
@@ -20,6 +21,8 @@ data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
+
+    fun toProductViewModel() = ProductViewModel(id, name, price, description, category)
 }
 
 enum class Category {

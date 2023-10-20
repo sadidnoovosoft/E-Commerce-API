@@ -1,6 +1,5 @@
 package com.example.ecommerceapi.service
 
-import com.example.ecommerceapi.model.User
 import com.example.ecommerceapi.repository.UserRepository
 import com.example.ecommerceapi.viewmodel.UserInputViewModel
 import com.example.ecommerceapi.viewmodel.UserOutputViewModel
@@ -18,7 +17,7 @@ class UserService(val userRepository: UserRepository) {
     }
 
     fun getAllUsers(): List<UserOutputViewModel> {
-        return userRepository.findAll().map(User::toUserOutputViewModel)
+        return userRepository.findAll().map { it.toUserOutputViewModel() }
     }
 
     fun updateUser(userId: Long, userInputViewModel: UserInputViewModel): UserOutputViewModel {

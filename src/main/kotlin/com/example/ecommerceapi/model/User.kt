@@ -5,7 +5,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
-data class User(
+class User(
     @Column(name = "first_name", nullable = false)
     var firstName: String,
 
@@ -19,10 +19,10 @@ data class User(
     var password: String,
 
     @OneToMany(mappedBy = "user")
-    val orders: List<Order> = emptyList(),
+    var orders: List<Order> = listOf(),
 
     @OneToMany
-    val cartItems: MutableList<CartItem> = mutableListOf()
+    var cartItems: List<CartItem> = listOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

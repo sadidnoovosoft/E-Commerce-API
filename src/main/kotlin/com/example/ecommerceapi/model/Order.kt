@@ -1,22 +1,22 @@
 package com.example.ecommerceapi.model
 
-import com.fasterxml.jackson.annotation.JsonFormat
+import com.example.ecommerceapi.viewmodel.OrderOutputViewModel
 import jakarta.persistence.*
-import java.util.Date
+import java.time.LocalDate
 
 @Entity
 @Table(name = "orders")
-data class Order(
+class Order(
     @Column(name = "quantity")
     val quantity: Long,
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    val status: OrderStatus = OrderStatus.CREATED,
+    var status: OrderStatus = OrderStatus.CREATED,
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     @Column(name = "date")
-    val date: Date = Date(),
+    @Temporal(TemporalType.DATE)
+    val date: LocalDate = LocalDate.now(),
 
     @ManyToOne
     @JoinColumn(name = "product_id")
@@ -24,12 +24,24 @@ data class Order(
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    val user: User,
+    var user: User,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     val id: Long = 0
+
+    fun toOrderOutputViewModel(): OrderOutputViewModel {
+        return OrderOutputViewModel(
+            orderId = id,
+            userId = user.id,
+            product = product.toProductViewModel(),
+            quantity = quantity,
+            orderStatus = status,
+            totalPrice = quantity * product.price,
+            orderDate = date
+        )
+    }
 }
 
 enum class OrderStatus {

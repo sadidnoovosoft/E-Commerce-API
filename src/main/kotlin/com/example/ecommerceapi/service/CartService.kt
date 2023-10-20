@@ -1,6 +1,5 @@
 package com.example.ecommerceapi.service
 
-import com.example.ecommerceapi.model.CartItem
 import com.example.ecommerceapi.repository.CartItemRepository
 import com.example.ecommerceapi.repository.ProductRepository
 import com.example.ecommerceapi.repository.UserRepository
@@ -18,7 +17,7 @@ class CartService(
         val product = productRepository.findById(cartItemViewModel.productId).get()
         val cartItem = cartItemViewModel.toCartItem(product)
         cartItem.product = product
-        user.cartItems.add(cartItem)
+        user.cartItems += cartItem
         cartItemRepository.save(cartItem)
         return cartItem.toCartItemViewModel()
     }
@@ -30,14 +29,14 @@ class CartService(
 
     fun removeCartItem(userId: Long, cartItemId: Long) {
         val user = userRepository.findById(userId).get()
-        user.cartItems.removeIf { it.id == cartItemId }
+        user.cartItems = user.cartItems.filter { it.id != cartItemId }
         cartItemRepository.deleteById(cartItemId)
     }
 
     fun clearCart(userId: Long) {
         val user = userRepository.findById(userId).get()
-        val cartItemsId = user.cartItems.map(CartItem::id)
-        user.cartItems.clear()
+        val cartItemsId = user.cartItems.map { it.id }
+        user.cartItems = listOf()
         cartItemRepository.deleteAllById(cartItemsId)
     }
 }
