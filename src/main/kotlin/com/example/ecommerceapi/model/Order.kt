@@ -15,7 +15,6 @@ class Order(
     var status: OrderStatus = OrderStatus.CREATED,
 
     @Column(name = "date")
-    @Temporal(TemporalType.DATE)
     val date: LocalDate = LocalDate.now(),
 
     @ManyToOne

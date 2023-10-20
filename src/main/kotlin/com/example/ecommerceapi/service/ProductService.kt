@@ -5,7 +5,8 @@ import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.repository.ProductRepository
 import com.example.ecommerceapi.viewmodel.ProductViewModel
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
-import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -15,20 +16,16 @@ class ProductService(val productRepository: ProductRepository) {
     }
 
     fun getProducts(
-        sortBy: String?,
-        sortOrder: String?,
+        pageable: Pageable,
         minPrice: Double?,
         maxPrice: Double?,
         category: Category?,
         keywords: String?
-    ): ProductsViewModel {
+    ): Page<Product> {
         val searchedProducts = if (keywords != null) {
             productRepository.findProductsByKeywords(keywords).map { it.id }
         } else null
-        val sort = Sort.by(if (sortOrder == "desc") Sort.Direction.DESC else Sort.Direction.ASC, sortBy ?: "id")
-        val products = productRepository.findProductsByFilters(sort, category, minPrice, maxPrice, searchedProducts)
-            .map { it.toProductViewModel() }
-        return ProductsViewModel(products.size, products)
+        return productRepository.findProductsByFilters(pageable, category, minPrice, maxPrice, searchedProducts)
     }
 
     fun getProductsByKeywords(keywords: String): ProductsViewModel {

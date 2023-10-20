@@ -2,7 +2,8 @@ package com.example.ecommerceapi.repository
 
 import com.example.ecommerceapi.model.Category
 import com.example.ecommerceapi.model.Product
-import org.springframework.data.domain.Sort
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
@@ -15,12 +16,12 @@ interface ProductRepository : JpaRepository<Product, Long> {
                 AND (:maxPrice IS NULL OR p.price <= :maxPrice)"""
     )
     fun findProductsByFilters(
-        sort: Sort,
+        pageable: Pageable,
         category: Category?,
         minPrice: Double?,
         maxPrice: Double?,
         searchedProducts: List<Long>?
-    ): List<Product>
+    ): Page<Product>
 
     @Query(
         """SELECT * FROM product

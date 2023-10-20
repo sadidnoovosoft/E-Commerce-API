@@ -5,6 +5,10 @@ import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import com.example.ecommerceapi.service.ProductService
 import com.example.ecommerceapi.viewmodel.ProductViewModel
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -28,12 +32,16 @@ class ProductController(val productService: ProductService) {
     fun getProducts(
         @RequestParam sortBy: String?,
         @RequestParam sortOrder: String?,
+        @RequestParam page: Int?,
+        @RequestParam size: Int?,
         @RequestParam minPrice: Double?,
         @RequestParam maxPrice: Double?,
         @RequestParam category: Category?,
         @RequestParam keywords: String?
-    ): ProductsViewModel {
-        return productService.getProducts(sortBy, sortOrder, minPrice, maxPrice, category, keywords)
+    ): Page<Product> {
+        val sort = Sort.by(if (sortOrder == "desc") Sort.Direction.DESC else Sort.Direction.ASC, sortBy ?: "id")
+        val pageable: Pageable = PageRequest.of(maxOf(page ?: 1, 1) - 1, size ?: 5, sort)
+        return productService.getProducts(pageable, minPrice, maxPrice, category, keywords)
     }
 
     @GetMapping("/{productId}")
