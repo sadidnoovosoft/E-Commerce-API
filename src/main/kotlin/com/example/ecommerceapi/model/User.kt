@@ -18,6 +18,10 @@ class User(
     @Column(name = "password", nullable = false, length = 10)
     var password: String,
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    val role: Role,
+
     @OneToMany(mappedBy = "user")
     var orders: List<Order> = listOf(),
 
@@ -30,4 +34,8 @@ class User(
     val id: Long = 0
 
     fun toUserOutputViewModel() = UserOutputViewModel(id, firstName, lastName, email)
+}
+
+enum class Role {
+    USER, ADMIN
 }
