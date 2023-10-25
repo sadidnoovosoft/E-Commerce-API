@@ -33,7 +33,7 @@ class User(
     @Column(name = "id")
     val id: Long = 0
 
-    fun toUserOutputViewModel() = UserOutputViewModel(id, firstName, lastName, email)
+    fun toUserOutputViewModel() = UserOutputViewModel(id, firstName, lastName, email, role)
 }
 
 enum class Role {

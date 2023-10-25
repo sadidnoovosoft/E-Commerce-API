@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
@@ -28,6 +29,7 @@ class OrderController(private val orderService: OrderService) {
     }
 
     @PutMapping("/{orderId}/status/{orderStatus}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     fun updateOrderStatus(
         @PathVariable userId: Long, @PathVariable orderId: Long, @PathVariable orderStatus: OrderStatus
     ): OrderOutputViewModel {
