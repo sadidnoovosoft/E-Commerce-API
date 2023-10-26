@@ -1,4 +1,4 @@
-package com.example.ecommerceapi.config
+package com.example.ecommerceapi.security
 
 import com.example.ecommerceapi.model.User
 import org.springframework.security.core.GrantedAuthority

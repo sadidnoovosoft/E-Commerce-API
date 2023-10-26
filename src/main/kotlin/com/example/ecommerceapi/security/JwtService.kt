@@ -1,4 +1,4 @@
-package com.example.ecommerceapi.config
+package com.example.ecommerceapi.security
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders

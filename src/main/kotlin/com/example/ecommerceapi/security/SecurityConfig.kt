@@ -1,4 +1,4 @@
-package com.example.ecommerceapi.config
+package com.example.ecommerceapi.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

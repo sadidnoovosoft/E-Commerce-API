@@ -1,7 +1,7 @@
 package com.example.ecommerceapi.service
 
-import com.example.ecommerceapi.config.JwtService
-import com.example.ecommerceapi.config.MyUserDetails
+import com.example.ecommerceapi.security.JwtService
+import com.example.ecommerceapi.security.MyUserDetails
 import com.example.ecommerceapi.repository.UserRepository
 import com.example.ecommerceapi.viewmodel.AuthResponseViewModel
 import com.example.ecommerceapi.viewmodel.LoginRequestViewModel

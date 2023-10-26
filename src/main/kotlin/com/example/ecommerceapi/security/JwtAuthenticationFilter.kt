@@ -1,4 +1,4 @@
-package com.example.ecommerceapi.config
+package com.example.ecommerceapi.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
