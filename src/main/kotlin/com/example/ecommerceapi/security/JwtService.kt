@@ -1,5 +1,6 @@
 package com.example.ecommerceapi.security
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
@@ -12,39 +13,23 @@ import java.util.*
 @Service
 class JwtService(@Value("\${myapp.secret-key}") private val secretKey: String) {
 
-    fun extractUsername(token: String): String {
+    fun extractClaims(token: String): Claims {
         return Jwts.parserBuilder()
             .setSigningKey(getSignInKey())
             .build()
             .parseClaimsJws(token)
-            .body.subject
+            .body
     }
 
     fun generateToken(userDetails: UserDetails): String {
         return Jwts
             .builder()
             .setSubject(userDetails.username)
+            .claim("authority", userDetails.authorities.first().authority)
             .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + 1000 * 60 * 60))
+            .setExpiration(Date(System.currentTimeMillis() + 36_00_000))
             .signWith(getSignInKey())
             .compact()
-    }
-
-    fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
-        val username = extractUsername(token)
-        return username == userDetails.username && !isTokenExpired(token)
-    }
-
-    fun isTokenExpired(token: String): Boolean {
-        return extractExpiration(token).before(Date())
-    }
-
-    fun extractExpiration(token: String): Date {
-        return Jwts.parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .body.expiration
     }
 
     fun getSignInKey(): Key {
