@@ -24,12 +24,13 @@ interface ProductRepository : JpaRepository<Product, Long> {
     ): Page<Product>
 
     @Query(
-        """SELECT * FROM product
+        """SELECT * FROM product as p
         WHERE (
             SELECT COUNT(*)
             FROM unnest(string_to_array(:keywords, ' ')) AS word
-            WHERE product.name ILIKE ('%' || word || '%')
-            OR product.description ILIKE ('%' || word || '%')
+            WHERE (POSITION(word in lower(p.name)) > 0)
+            OR (p.description IS NOT NULL 
+            AND POSITION(word in lower(p.description)) > 0)
         ) > 0
         """,
         nativeQuery = true
