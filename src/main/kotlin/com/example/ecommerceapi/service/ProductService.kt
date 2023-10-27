@@ -3,6 +3,7 @@ package com.example.ecommerceapi.service
 import com.example.ecommerceapi.model.Category
 import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.repository.ProductRepository
+import com.example.ecommerceapi.utils.ProductNotFoundException
 import com.example.ecommerceapi.viewmodel.ProductViewModel
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import org.springframework.data.domain.Page
@@ -16,29 +17,26 @@ class ProductService(val productRepository: ProductRepository) {
     }
 
     fun getProducts(
-        pageable: Pageable,
-        minPrice: Double?,
-        maxPrice: Double?,
-        category: Category?,
-        keywords: String?
+        pageable: Pageable, minPrice: Double?, maxPrice: Double?, category: Category?, keywords: String?
     ): Page<Product> {
-        val searchedProducts = if (keywords != null) {
+        val searchedProducts = keywords?.takeIf { it.isNotBlank() }?.let {
             productRepository.findProductsByKeywords(keywords).map { it.id }
-        } else null
+        }
         return productRepository.findProductsByFilters(pageable, category, minPrice, maxPrice, searchedProducts)
     }
 
     fun getProductsByKeywords(keywords: String): ProductsViewModel {
-        val searchedProducts = productRepository.findProductsByKeywords(keywords).map { it.toProductViewModel() }
+        val searchedProducts = productRepository.findProductsByKeywords(keywords.trim()).map { it.toProductViewModel() }
         return ProductsViewModel(searchedProducts.size, searchedProducts)
     }
 
     fun getProductById(productId: Long): ProductViewModel {
-        return productRepository.findById(productId).get().toProductViewModel()
+        return productRepository.findById(productId).orElseThrow { ProductNotFoundException(productId) }
+            .toProductViewModel()
     }
 
     fun updateProduct(newProduct: Product, productId: Long): ProductViewModel {
-        val existingProduct = productRepository.findById(productId).get()
+        val existingProduct = productRepository.findById(productId).orElseThrow { ProductNotFoundException(productId) }
         existingProduct.name = newProduct.name
         existingProduct.price = newProduct.price
         existingProduct.description = newProduct.description
@@ -47,6 +45,7 @@ class ProductService(val productRepository: ProductRepository) {
     }
 
     fun deleteProduct(productId: Long) {
-        productRepository.deleteById(productId)
+        val product = productRepository.findById(productId).orElseThrow { ProductNotFoundException(productId) }
+        productRepository.delete(product)
     }
 }
