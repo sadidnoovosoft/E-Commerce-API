@@ -5,6 +5,7 @@ import com.example.ecommerceapi.viewmodel.AuthResponseViewModel
 import com.example.ecommerceapi.viewmodel.LoginRequestViewModel
 import com.example.ecommerceapi.viewmodel.UserInputViewModel
 import com.example.ecommerceapi.viewmodel.UserOutputViewModel
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -17,7 +18,7 @@ import java.security.Principal
 class AuthController(val authService: AuthService) {
 
     @PostMapping("/register")
-    fun register(@RequestBody userInputViewModel: UserInputViewModel): AuthResponseViewModel {
+    fun register(@Valid @RequestBody userInputViewModel: UserInputViewModel): AuthResponseViewModel {
         return authService.register(userInputViewModel)
     }
 

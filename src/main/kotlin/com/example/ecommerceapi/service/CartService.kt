@@ -1,5 +1,6 @@
 package com.example.ecommerceapi.service
 
+import com.example.ecommerceapi.model.CartItem
 import com.example.ecommerceapi.repository.CartItemRepository
 import com.example.ecommerceapi.repository.ProductRepository
 import com.example.ecommerceapi.repository.UserRepository
@@ -22,9 +23,9 @@ class CartService(
         return cartItem.toCartItemViewModel()
     }
 
-    fun getCartItems(userId: Long): List<CartItemViewModel> {
+    fun getCartItems(userId: Long): List<CartItem> {
         val user = userRepository.findById(userId).get()
-        return user.cartItems.map { it.toCartItemViewModel() }
+        return user.cartItems
     }
 
     fun removeCartItem(userId: Long, cartItemId: Long) {

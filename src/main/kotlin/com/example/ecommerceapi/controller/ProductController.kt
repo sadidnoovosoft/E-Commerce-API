@@ -5,6 +5,7 @@ import com.example.ecommerceapi.model.Product
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import com.example.ecommerceapi.service.ProductService
 import com.example.ecommerceapi.viewmodel.ProductViewModel
+import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -26,7 +27,7 @@ class ProductController(val productService: ProductService) {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    fun addProduct(@RequestBody product: Product): ProductViewModel {
+    fun addProduct(@Valid @RequestBody product: Product): ProductViewModel {
         return productService.addProduct(product)
     }
 

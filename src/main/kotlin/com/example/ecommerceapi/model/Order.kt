@@ -2,12 +2,14 @@ package com.example.ecommerceapi.model
 
 import com.example.ecommerceapi.viewmodel.OrderOutputViewModel
 import jakarta.persistence.*
+import jakarta.validation.constraints.Positive
 import java.time.LocalDate
 
 @Entity
 @Table(name = "orders")
 class Order(
     @Column(name = "quantity")
+    @field:Positive
     val quantity: Long,
 
     @Enumerated(EnumType.STRING)

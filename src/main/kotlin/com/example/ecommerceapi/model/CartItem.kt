@@ -8,10 +8,12 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.validation.constraints.Positive
 
 @Entity
 class CartItem(
     @Column(name = "quantity", nullable = false)
+    @field:Positive
     var quantity: Long,
 
     @ManyToOne

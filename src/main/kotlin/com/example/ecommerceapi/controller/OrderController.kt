@@ -4,6 +4,7 @@ import com.example.ecommerceapi.model.OrderStatus
 import com.example.ecommerceapi.service.OrderService
 import com.example.ecommerceapi.viewmodel.OrderInputViewModel
 import com.example.ecommerceapi.viewmodel.OrderOutputViewModel
+import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
@@ -18,7 +19,7 @@ class OrderController(private val orderService: OrderService) {
 
     @PostMapping
     fun placeOrder(
-        @PathVariable userId: Long, @RequestBody orderInputViewModel: OrderInputViewModel
+        @PathVariable userId: Long, @Valid @RequestBody orderInputViewModel: OrderInputViewModel
     ): OrderOutputViewModel {
         return orderService.placeOrder(userId, orderInputViewModel)
     }

@@ -2,6 +2,7 @@ package com.example.ecommerceapi.model
 
 import com.example.ecommerceapi.viewmodel.UserOutputViewModel
 import jakarta.persistence.*
+import jakarta.validation.constraints.Email
 
 @Entity
 @Table(name = "users")
@@ -13,6 +14,7 @@ class User(
     var lastName: String,
 
     @Column(name = "email", unique = true, nullable = false)
+    @field:Email
     var email: String,
 
     @Column(name = "password", nullable = false)
