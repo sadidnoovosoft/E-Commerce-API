@@ -2,6 +2,7 @@ package com.example.ecommerceapi.controller
 
 import com.example.ecommerceapi.model.Category
 import com.example.ecommerceapi.model.Product
+import com.example.ecommerceapi.service.ImageService
 import com.example.ecommerceapi.viewmodel.ProductsViewModel
 import com.example.ecommerceapi.service.ProductService
 import com.example.ecommerceapi.viewmodel.ProductViewModel
@@ -20,15 +21,24 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.multipart.MultipartFile
 
 @RestController
 @RequestMapping("/products")
-class ProductController(val productService: ProductService) {
-
+class ProductController(
+    val productService: ProductService,
+    val imageService: ImageService
+) {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     fun addProduct(@Valid @RequestBody product: Product): ProductViewModel {
         return productService.addProduct(product)
+    }
+
+    @PostMapping("/{productId}/images")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    fun uploadImage(@PathVariable productId: Long, @RequestParam file: MultipartFile): String {
+        return imageService.uploadImage(productId, file)
     }
 
     @GetMapping
@@ -41,15 +51,20 @@ class ProductController(val productService: ProductService) {
         @RequestParam maxPrice: Double?,
         @RequestParam category: Category?,
         @RequestParam keywords: String?
-    ): Page<Product> {
+    ): Page<ProductViewModel> {
         val sort = Sort.by(if (sortOrder == "desc") Sort.Direction.DESC else Sort.Direction.ASC, sortBy ?: "id")
-        val pageable: Pageable = PageRequest.of(maxOf(page ?: 1, 1) - 1, size ?: 5, sort)
+        val pageable: Pageable = PageRequest.of(page ?: 0, size ?: 5, sort)
         return productService.getProducts(pageable, minPrice, maxPrice, category, keywords)
     }
 
     @GetMapping("/{productId}")
     fun getProductById(@PathVariable productId: Long): ProductViewModel {
         return productService.getProductById(productId)
+    }
+
+    @GetMapping(value = ["/{productId}/images/{fileName}"], produces = ["image/png"])
+    fun getProductImage(@PathVariable productId: Long, @PathVariable fileName: String): ByteArray {
+        return imageService.downloadImage(productId, fileName)
     }
 
     @GetMapping("/search")

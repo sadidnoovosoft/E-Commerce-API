@@ -21,12 +21,17 @@ class Product(
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
     var category: Category,
+
+    @OneToMany(cascade = [CascadeType.ALL])
+    var images: List<Image> = listOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0
 
-    fun toProductViewModel() = ProductViewModel(id, name, price, description, category)
+    fun toProductViewModel() = ProductViewModel(
+        id, name, price, description, category, images.map { "http://localhost:3000/products/$id/images/${it.name}" }
+    )
 }
 
 enum class Category {

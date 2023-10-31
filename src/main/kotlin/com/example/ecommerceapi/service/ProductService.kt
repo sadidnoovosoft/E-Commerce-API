@@ -18,11 +18,13 @@ class ProductService(val productRepository: ProductRepository) {
 
     fun getProducts(
         pageable: Pageable, minPrice: Double?, maxPrice: Double?, category: Category?, keywords: String?
-    ): Page<Product> {
+    ): Page<ProductViewModel> {
         val searchedProducts = keywords?.takeIf { it.isNotBlank() }?.let {
             productRepository.findProductsByKeywords(keywords).map { it.id }
         }
-        return productRepository.findProductsByFilters(pageable, category, minPrice, maxPrice, searchedProducts)
+        return productRepository
+            .findProductsByFilters(pageable, category, minPrice, maxPrice, searchedProducts)
+            .map { it.toProductViewModel() }
     }
 
     fun getProductsByKeywords(keywords: String): ProductsViewModel {

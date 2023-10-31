@@ -54,7 +54,7 @@ class OrderController(private val orderService: OrderService) {
         @RequestParam size: Int?
     ): Page<OrderOutputViewModel> {
         val sort = Sort.by(if (sortOrder == "asc") Sort.Direction.ASC else Sort.Direction.DESC, sortBy ?: "date")
-        val pageable: Pageable = PageRequest.of(maxOf(page ?: 1, 1) - 1, size ?: 5, sort)
+        val pageable: Pageable = PageRequest.of(page ?: 0, size ?: 5, sort)
         return orderService.getOrders(userId, status, fromDate, toDate, pageable)
     }
 }

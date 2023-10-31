@@ -11,5 +11,6 @@ data class ProductViewModel(
     @field:Positive
     val price: Double,
     val description: String,
-    val category: Category
+    val category: Category,
+    val images: List<String>
 )
