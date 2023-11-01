@@ -31,6 +31,9 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
     implementation("io.jsonwebtoken:jjwt-api:0.11.2")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.1.2")
+    implementation("com.google.firebase:firebase-admin:9.2.0")
+    implementation("com.google.cloud:google-cloud-storage:2.29.0")
+    implementation("com.google.cloud:libraries-bom:26.26.0")
 }
 
 tasks.withType<KotlinCompile> {

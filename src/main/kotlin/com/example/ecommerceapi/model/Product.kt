@@ -30,7 +30,7 @@ class Product(
     val id: Long = 0
 
     fun toProductViewModel() = ProductViewModel(
-        id, name, price, description, category, images.map { "http://localhost:3000/products/$id/images/${it.name}" }
+        id, name, price, description, category, images.map { it.filePath }
     )
 }
 

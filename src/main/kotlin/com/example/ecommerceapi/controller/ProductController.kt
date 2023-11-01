@@ -62,11 +62,6 @@ class ProductController(
         return productService.getProductById(productId)
     }
 
-    @GetMapping(value = ["/{productId}/images/{fileName}"], produces = ["image/png"])
-    fun getProductImage(@PathVariable productId: Long, @PathVariable fileName: String): ByteArray {
-        return imageService.downloadImage(productId, fileName)
-    }
-
     @GetMapping("/search")
     fun getProductByKeywords(@RequestParam keywords: String): ProductsViewModel {
         return productService.getProductsByKeywords(keywords)
