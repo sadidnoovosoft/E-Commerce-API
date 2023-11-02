@@ -4,7 +4,6 @@ import com.example.ecommerceapi.security.JwtService
 import com.example.ecommerceapi.security.MyUserDetails
 import com.example.ecommerceapi.repository.UserRepository
 import com.example.ecommerceapi.utils.DuplicateResourceException
-import com.example.ecommerceapi.viewmodel.AuthResponseViewModel
 import com.example.ecommerceapi.viewmodel.LoginRequestViewModel
 import com.example.ecommerceapi.viewmodel.UserInputViewModel
 import com.example.ecommerceapi.viewmodel.UserOutputViewModel
@@ -21,16 +20,16 @@ class AuthService(
     val passwordEncoder: PasswordEncoder,
     val authManager: AuthenticationManager
 ) {
-    fun register(userInputViewModel: UserInputViewModel): AuthResponseViewModel {
+    fun register(userInputViewModel: UserInputViewModel): String {
         if (userRepository.existsByEmail(userInputViewModel.email)) {
             throw DuplicateResourceException("User with email ${userInputViewModel.email} already exists")
         }
         val user = userInputViewModel.toUser(passwordEncoder)
         val userDetails = MyUserDetails(userRepository.save(user))
-        return AuthResponseViewModel(jwtService.generateToken(userDetails))
+        return jwtService.generateToken(userDetails)
     }
 
-    fun login(loginRequestViewModel: LoginRequestViewModel): AuthResponseViewModel {
+    fun login(loginRequestViewModel: LoginRequestViewModel): String {
         authManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 loginRequestViewModel.email,
@@ -39,7 +38,7 @@ class AuthService(
         )
         val user = userRepository.findUserByEmail(loginRequestViewModel.email)
         val userDetails = MyUserDetails(user)
-        return AuthResponseViewModel(jwtService.generateToken(userDetails))
+        return jwtService.generateToken(userDetails)
     }
 
     fun getLoggedInUser(principal: Principal): UserOutputViewModel {

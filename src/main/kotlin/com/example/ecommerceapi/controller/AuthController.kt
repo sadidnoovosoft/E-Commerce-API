@@ -1,7 +1,6 @@
 package com.example.ecommerceapi.controller
 
 import com.example.ecommerceapi.service.AuthService
-import com.example.ecommerceapi.viewmodel.AuthResponseViewModel
 import com.example.ecommerceapi.viewmodel.LoginRequestViewModel
 import com.example.ecommerceapi.viewmodel.UserInputViewModel
 import com.example.ecommerceapi.viewmodel.UserOutputViewModel
@@ -18,12 +17,12 @@ import java.security.Principal
 class AuthController(val authService: AuthService) {
 
     @PostMapping("/register")
-    fun register(@Valid @RequestBody userInputViewModel: UserInputViewModel): AuthResponseViewModel {
+    fun register(@Valid @RequestBody userInputViewModel: UserInputViewModel): String {
         return authService.register(userInputViewModel)
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody loginRequestViewModel: LoginRequestViewModel): AuthResponseViewModel {
+    fun login(@RequestBody loginRequestViewModel: LoginRequestViewModel): String {
         return authService.login(loginRequestViewModel)
     }
 
