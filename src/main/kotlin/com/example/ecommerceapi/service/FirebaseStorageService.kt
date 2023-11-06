@@ -6,6 +6,7 @@ import com.google.cloud.storage.BlobInfo
 import com.google.cloud.storage.StorageOptions
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.io.ClassPathResource
+import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.net.URLEncoder
