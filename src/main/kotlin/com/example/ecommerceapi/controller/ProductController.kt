@@ -20,10 +20,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import java.util.concurrent.CompletableFuture
 
 @RestController
 @RequestMapping("/products")
@@ -34,13 +32,19 @@ class ProductController(
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     fun addProduct(
-        @Valid @RequestPart product: Product,
-        @RequestPart files: List<MultipartFile>
+        @Valid @RequestBody product: Product,
+    ): ProductViewModel {
+        return productService.addProduct(product)
+    }
+
+    @PostMapping("/{productId}/images")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    fun uploadImages(
+        @PathVariable productId: Long,
+        @RequestParam files: List<MultipartFile>
     ): String {
-        val uploadFutures = files.map { imageService.uploadImage(it) }
-        CompletableFuture.allOf(*uploadFutures.toTypedArray()).join()
-        productService.addProduct(product)
-        return "Product upload started"
+        files.map { imageService.uploadImage(it.bytes) }
+        return "Images upload started"
     }
 
     @GetMapping
