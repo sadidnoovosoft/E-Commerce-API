@@ -9,7 +9,10 @@ import jakarta.persistence.Id
 @Entity
 class Image(
     @Column(name = "name")
-    val name: String?,
+    val name: String,
+
+    @Column(name = "folder_name")
+    val folderName: String,
 
     @Column(name = "type")
     val type: String?,
