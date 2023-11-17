@@ -4,11 +4,12 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import java.time.LocalDateTime
 
-interface ImageTaskRepository : JpaRepository<ImageTask, Long> {
+interface TaskRepository : JpaRepository<Task, Long> {
+
     fun findByNextAttemptTimeLessThanAndStatusOrderByNextAttemptTime(
         dateTime: LocalDateTime,
-        status: ImageTaskStatus,
+        status: TaskStatus,
         page: Pageable
-    ): List<ImageTask>
-
+    ): List<Task>
+    
 }

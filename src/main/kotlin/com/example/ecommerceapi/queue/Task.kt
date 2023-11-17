@@ -1,22 +1,24 @@
 package com.example.ecommerceapi.queue
 
-import com.example.ecommerceapi.model.Image
+import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnTransformer
 import java.time.LocalDateTime
 
 @Entity
-class ImageTask(
+class Task(
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    val type: ImageTaskType,
+    val type: TaskType,
+
+    @Column(columnDefinition = "jsonb")
+    @Convert(converter = MapJsonConverter::class)
+    @ColumnTransformer(write = "?::jsonb")
+    val payload: Map<String, Any>,
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    var status: ImageTaskStatus = ImageTaskStatus.PENDING,
-
-    @ManyToOne
-    @JoinColumn(name = "image_id")
-    val image: Image,
+    var status: TaskStatus = TaskStatus.PENDING,
 
     @Column(name = "last_attempt_time")
     var lastAttemptTime: LocalDateTime? = null,
@@ -32,14 +34,12 @@ class ImageTask(
     val id: Long = 0
 }
 
-enum class ImageTaskStatus {
+enum class TaskStatus {
     PENDING,
     ERROR,
     SUCCESS
 }
 
-enum class ImageTaskType {
-    WATERMARK,
-    DOWNSCALE,
-    UPSCALE
+enum class TaskType {
+    IMAGE_PROCESSING
 }
