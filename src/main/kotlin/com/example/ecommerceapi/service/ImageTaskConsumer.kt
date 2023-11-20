@@ -1,9 +1,6 @@
 package com.example.ecommerceapi.service
 
-import com.example.ecommerceapi.queue.Task
-import com.example.ecommerceapi.queue.TaskConsumer
-import com.example.ecommerceapi.queue.TaskRepository
-import com.example.ecommerceapi.queue.TaskStatus
+import com.example.ecommerceapi.queue.*
 import org.springframework.stereotype.Component
 import java.io.File
 import java.nio.file.Files
@@ -14,6 +11,7 @@ class ImageTaskConsumer(
     val imageService: ImageService,
     val taskRepository: TaskRepository
 ) : TaskConsumer {
+    override val taskType: TaskType = TaskType.IMAGE_PROCESSING
 
     override fun processTask(task: Task) {
         val payload = task.payload

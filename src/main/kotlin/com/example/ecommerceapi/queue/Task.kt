@@ -1,6 +1,5 @@
 package com.example.ecommerceapi.queue
 
-import com.fasterxml.jackson.annotation.JsonSubTypes.Type
 import jakarta.persistence.*
 import org.hibernate.annotations.ColumnTransformer
 import java.time.LocalDateTime
