@@ -8,12 +8,11 @@ import java.time.LocalDateTime
 
 @Component
 class ImageTaskConsumer(
-    val imageService: ImageService,
-    val taskRepository: TaskRepository
+    val imageService: ImageService
 ) : TaskConsumer {
     override val taskType: TaskType = TaskType.IMAGE_PROCESSING
 
-    override fun processTask(task: Task) {
+    override fun processTask(task: Task): Task {
         val payload = task.payload
         val process = payload["process"].toString()
         val fileName = payload["fileName"].toString()
@@ -34,7 +33,7 @@ class ImageTaskConsumer(
             e.printStackTrace()
         }
         task.nextAttemptTime = null
-        taskRepository.save(task)
+        return task
     }
 
     fun addWaterMark(fileName: String, filePath: String, folderName: String) {
