@@ -1,12 +1,14 @@
 package com.example.ecommerceapi.service.fileuploadstrategy
 
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 
 @Service
+@Primary
 class FileSystemUpload(
     @Value("\${myapp.file-system.folder-path}") private val folderPath: String
 ) : FileUploadStrategy {

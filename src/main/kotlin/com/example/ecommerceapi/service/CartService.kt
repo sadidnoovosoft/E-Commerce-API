@@ -5,7 +5,6 @@ import com.example.ecommerceapi.repository.CartItemRepository
 import com.example.ecommerceapi.repository.ProductRepository
 import com.example.ecommerceapi.repository.UserRepository
 import com.example.ecommerceapi.utils.ProductNotFoundException
-import com.example.ecommerceapi.utils.ResourceNotFoundException
 import com.example.ecommerceapi.utils.UserNotFoundException
 import com.example.ecommerceapi.viewmodel.CartItemViewModel
 import org.springframework.stereotype.Service

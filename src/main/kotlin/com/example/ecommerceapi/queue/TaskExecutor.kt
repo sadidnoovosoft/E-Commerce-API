@@ -29,9 +29,18 @@ class TaskExecutor(
                 )
                 imageTasks.forEach {
                     taskExecutor.execute {
-                        val taskConsumer = taskConsumerMap[it.type]
-                        val modifiedTask = taskConsumer?.processTask(it) ?: throw Exception("Invalid task type!")
-                        taskRepository.save(modifiedTask)
+                        it.lastAttemptTime = LocalDateTime.now()
+                        try {
+                            val taskConsumer = taskConsumerMap[it.type]
+                            taskConsumer?.processTask(it) ?: throw Exception("Invalid task type!")
+                            it.status = TaskStatus.SUCCESS
+                        } catch (e: Exception) {
+                            it.status = TaskStatus.ERROR
+                            it.lastAttemptErrorMessage = e.message
+                            e.printStackTrace()
+                        }
+                        it.nextAttemptTime = null
+                        taskRepository.save(it)
                     }
                 }
                 println("Thread name: ${Thread.currentThread().name}")
