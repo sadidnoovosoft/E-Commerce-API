@@ -4,11 +4,11 @@ import com.example.ecommerceapi.model.Image
 import com.example.ecommerceapi.queue.TaskProducer
 import com.example.ecommerceapi.queue.TaskType
 import com.example.ecommerceapi.repository.ImageRepository
+import com.example.ecommerceapi.service.fileuploadstrategy.FileSystemUpload
 import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Service
 import java.io.File
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
@@ -16,30 +16,14 @@ import java.util.concurrent.CompletableFuture
 class ImageService(
     val imageRepository: ImageRepository,
     val taskProducer: TaskProducer,
-    val firebaseStorageService: FirebaseStorageService,
+    val fileSystemUpload: FileSystemUpload
 ) {
-    private val folderPath = "C:/projects/E-commerce-API/Images/"
-
-    fun uploadImageToFirebase(imageData: ByteArray, fileName: String): String {
-        return firebaseStorageService.uploadFile(imageData, fileName)
-    }
-
-    fun uploadImageToFileSystem(imageData: ByteArray, fileName: String, folderName: String): String {
-        println("Saving: $fileName in Thread ${Thread.currentThread().name}")
-        val newFolderPath = folderPath + folderName
-        File(newFolderPath).mkdirs()
-        val filePath = "${newFolderPath}/${fileName}"
-        Files.write(Paths.get(filePath), imageData)
-        return filePath
-    }
-
     @Async
     fun uploadImage(imageData: ByteArray): CompletableFuture<Boolean> {
         val folderName = UUID.randomUUID().toString().replace("-", "")
         val fileName = "$folderName.png"
-        val filePath = uploadImageToFileSystem(imageData, fileName, folderName)
-        val image = imageRepository.save(Image(fileName, folderName, "image/png", filePath))
-        imageRepository.save(image)
+        val filePath = fileSystemUpload.uploadFile(imageData, fileName, folderName)
+        imageRepository.save(Image(fileName, folderName, "image/png", filePath))
         val payload = mapOf(
             "fileName" to fileName, "filePath" to filePath, "folderName" to folderName
         )
@@ -47,5 +31,26 @@ class ImageService(
         taskProducer.enqueueTask(TaskType.IMAGE_PROCESSING, payload + mapOf("process" to "UPSCALE"))
         taskProducer.enqueueTask(TaskType.IMAGE_PROCESSING, payload + mapOf("process" to "DOWNSCALE"))
         return CompletableFuture.completedFuture(true)
+    }
+
+    fun addWaterMark(fileName: String, filePath: String, folderName: String) {
+        val imageData: ByteArray = Files.readAllBytes(File(filePath).toPath())
+        println("WaterMarking image in Thread: ${Thread.currentThread().name}")
+        Thread.sleep(5000)
+        fileSystemUpload.uploadFile(imageData, "${folderName}_WATERMARK.png", folderName)
+    }
+
+    fun downscaleImage(fileName: String, filePath: String, folderName: String) {
+        val imageData: ByteArray = Files.readAllBytes(File(filePath).toPath())
+        println("DownScaling image in Thread: ${Thread.currentThread().name}")
+        Thread.sleep(5000)
+        fileSystemUpload.uploadFile(imageData, "${folderName}_DOWNSCALE.png", folderName)
+    }
+
+    fun upscaleImage(fileName: String, filePath: String, folderName: String) {
+        val imageData: ByteArray = Files.readAllBytes(File(filePath).toPath())
+        println("UpScaling image in Thread: ${Thread.currentThread().name}")
+        Thread.sleep(5000)
+        fileSystemUpload.uploadFile(imageData, "${folderName}_UPSCALE.png", folderName)
     }
 }
